@@ -1,4 +1,9 @@
 import {
+    createPerformancePieChart,
+    updatePerformancePieChart
+} from "./charts/performancePieChart.js";
+
+import {
     loadSemesterData
 } from "./data/loadData.js";
 
@@ -53,6 +58,21 @@ async function initializeDashboard() {
         studentData.length
     );
 
+    createPerformancePieChart(studentData);
+
+    const sectionSelect =
+        document.querySelector("#section-select");
+
+    sectionSelect.addEventListener("change", () => {
+
+        const selectedSection =
+            sectionSelect.value;
+
+        updatePerformancePieChart(
+            studentData,
+            selectedSection
+        );
+    });
 
     let currentStart = 0;
 
