@@ -184,3 +184,9 @@ export function sortMarksDescending() {
 
     updateChart(sortedData);
 }
+
+export function updateMarksForDepartment(data) {
+    const selectedData = data.slice(0, 20);
+    currentData = selectedData;
+    updateChart(selectedData);
+}

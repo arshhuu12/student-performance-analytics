@@ -146,7 +146,7 @@ export function createScatterPlot(data) {
 
     chart
         .selectAll(".scatter-point")
-        .data(data)
+        .data(data, d => d.student_id)
         .enter()
         .append("circle")
         .attr(
@@ -314,4 +314,56 @@ function resetSelection() {
     console.log(
         "Scatter selection reset"
     );
+}
+
+export function updateScatterPlot(data) {
+
+    const points = chart
+        .selectAll(".scatter-point")
+        .data(data, d => d.student_id);
+
+    points.exit()
+        .transition()
+        .duration(500)
+        .attr("r", 0)
+        .remove();
+
+    points.enter()
+        .append("circle")
+        .attr("class", "scatter-point")
+        .attr("cx", d => x(d.attendance_percentage))
+        .attr("cy", d => y(d.internal_marks))
+        .attr("r", 0)
+        .on("mouseover", function(event, d) {
+            showTooltip(event, d);
+
+            d3.select(this)
+                .transition()
+                .duration(150)
+                .attr("r", 9);
+        })
+        .on("mousemove", function(event) {
+            moveTooltip(event);
+        })
+        .on("mouseout", function() {
+            hideTooltip();
+
+            d3.select(this)
+                .transition()
+                .duration(150)
+                .attr("r", 5);
+        })
+        .on("click", function(event, d) {
+            selectStudent(this, d);
+        })
+        .transition()
+        .duration(700)
+        .attr("r", 5);
+
+    points
+        .transition()
+        .duration(700)
+        .attr("cx", d => x(d.attendance_percentage))
+        .attr("cy", d => y(d.internal_marks))
+        .attr("r", 5);
 }

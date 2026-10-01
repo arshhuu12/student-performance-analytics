@@ -1,5 +1,6 @@
 export function initializeDashboardControls(
-    studentData
+    studentData,
+    updateCharts
 ) {
 
     const departmentSelect =
@@ -35,12 +36,12 @@ export function initializeDashboardControls(
             total;
 
         averageMarks.textContent =
-            marksAverage
+            marksAverage !== undefined
                 ? marksAverage.toFixed(2)
                 : "0";
 
         averageAttendance.textContent =
-            attendanceAverage
+            attendanceAverage !== undefined
                 ? attendanceAverage.toFixed(2) + "%"
                 : "0%";
     }
@@ -67,15 +68,7 @@ export function initializeDashboardControls(
 
         updateSummary(filteredData);
 
-        console.log(
-            "Dashboard filter:",
-            department
-        );
-
-        console.log(
-            "Filtered students:",
-            filteredData.length
-        );
+        updateCharts(filteredData);
     }
 
 

@@ -19,7 +19,8 @@ import {
 } from "./charts/semesterLineChart.js";
 
 import {
-    createScatterPlot
+    createScatterPlot,
+    updateScatterPlot
 } from "./charts/scatterPlot.js";
 
 import {
@@ -32,7 +33,8 @@ import {
     createMarksBarChart,
     changeMarksDataset,
     sortMarksAscending,
-    sortMarksDescending
+    sortMarksDescending,
+    updateMarksForDepartment
 } from "./charts/marksBarChart.js";
 
 
@@ -62,7 +64,7 @@ async function initializeDashboard() {
         studentData.length
     );
 
-    initializeDashboardControls(studentData);
+    
 
     createPerformancePieChart(studentData);
 
@@ -92,6 +94,20 @@ async function initializeDashboard() {
     createScatterPlot(
     studentData.slice(0, 200)
     );   
+
+    initializeDashboardControls(
+        studentData,
+        (filteredData) => {
+
+            updateMarksForDepartment(
+                filteredData
+            );
+
+            updateScatterPlot(
+                filteredData.slice(0, 200)
+            );
+        }
+    );
 
     const semesterData =
     await loadSemesterData();
