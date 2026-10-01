@@ -21,7 +21,9 @@ import {
 
 import {
     createMarksBarChart,
-    changeMarksDataset
+    changeMarksDataset,
+    sortMarksAscending,
+    sortMarksDescending
 } from "./charts/marksBarChart.js";
 
 
@@ -58,6 +60,8 @@ async function initializeDashboard() {
     createMarksBarChart(
         studentData.slice(0, 20)
     );
+
+    
 
     createScatterPlot(
     studentData.slice(0, 200)
@@ -119,6 +123,18 @@ async function initializeDashboard() {
             changeMarksDataset(
                 newDataset
             );
+
+            document
+                .querySelector("#sort-ascending")
+                .addEventListener("click", () => {
+                    sortMarksAscending();
+                });
+
+            document
+                .querySelector("#sort-descending")
+                .addEventListener("click", () => {
+                    sortMarksDescending();
+                });
         }
     );
 

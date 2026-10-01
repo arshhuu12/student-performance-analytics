@@ -168,3 +168,19 @@ export function changeMarksDataset(data) {
 
     updateChart(data);
 }
+
+export function sortMarksAscending() {
+    const sortedData = [...currentData].sort(
+        (a, b) => a.final_marks - b.final_marks
+    );
+
+    updateChart(sortedData);
+}
+
+export function sortMarksDescending() {
+    const sortedData = [...currentData].sort(
+        (a, b) => b.final_marks - a.final_marks
+    );
+
+    updateChart(sortedData);
+}
