@@ -4,6 +4,10 @@ import {
 } from "./charts/performancePieChart.js";
 
 import {
+    initializeDashboardControls
+} from "./dashboard.js";
+
+import {
     loadSemesterData
 } from "./data/loadData.js";
 
@@ -57,6 +61,8 @@ async function initializeDashboard() {
         "Students loaded:",
         studentData.length
     );
+
+    initializeDashboardControls(studentData);
 
     createPerformancePieChart(studentData);
 

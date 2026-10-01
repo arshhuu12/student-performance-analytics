@@ -19,6 +19,44 @@
 
     <main>
 
+        <section class="dashboard-controls">
+
+            <div class="filter-group">
+                <label for="department-select">
+                    Department
+                </label>
+
+                <select id="department-select">
+                    <option value="ALL">All Departments</option>
+                    <option value="CSE">CSE</option>
+                    <option value="AI & DS">AI & DS</option>
+                    <option value="ECE">ECE</option>
+                    <option value="EEE">EEE</option>
+                    <option value="Mechanical">Mechanical</option>
+                    <option value="Civil">Civil</option>
+                    <option value="IT">IT</option>
+                </select>
+            </div>
+
+            <div class="dashboard-summary">
+                <div class="summary-card">
+                    <span>Total Students</span>
+                    <strong id="total-students">0</strong>
+                </div>
+
+                <div class="summary-card">
+                    <span>Average Marks</span>
+                    <strong id="average-marks">0</strong>
+                </div>
+
+                <div class="summary-card">
+                    <span>Average Attendance</span>
+                    <strong id="average-attendance">0</strong>
+                </div>
+            </div>
+
+        </section>
+
         <section class="chart-card">
 
             <h2>Student Final Marks</h2>
