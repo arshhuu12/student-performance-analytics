@@ -40,3 +40,37 @@ main {
 .bar {
     fill: steelblue;
 }
+
+#scatter-tooltip {
+    position: absolute;
+    display: none;
+
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+
+    padding: 10px;
+
+    font-size: 13px;
+
+    box-shadow:
+        0 2px 8px
+        rgba(0, 0, 0, 0.15);
+
+    pointer-events: none;
+
+    z-index: 1000;
+}
+
+.scatter-point {
+    fill: steelblue;
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.scatter-point.selected {
+    fill: orange;
+    opacity: 1;
+    stroke: black;
+    stroke-width: 2px;
+}

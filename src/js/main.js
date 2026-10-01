@@ -1,4 +1,8 @@
 import {
+    createScatterPlot
+} from "./charts/scatterPlot.js";
+
+import {
     loadStudentData,
     loadAttendanceData
 } from "./data/loadData.js";
@@ -29,6 +33,8 @@ async function initializeDashboard() {
         await loadStudentData();
 
 
+
+
     console.log(
         "Students loaded:",
         studentData.length
@@ -41,6 +47,10 @@ async function initializeDashboard() {
     createMarksBarChart(
         studentData.slice(0, 20)
     );
+
+    createScatterPlot(
+    studentData.slice(0, 200)
+    );   
 
 
     const datasetButton =
