@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Performance Analytics</title>
+
+    <link rel="stylesheet" href="src/css/style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Student Performance Analytics</h1>
+        <p>Interactive Student Performance Dashboard</p>
+    </header>
+
+    <main>
+
+        <section class="chart-card">
+
+            <h2>Student Final Marks</h2>
+
+            <button id="change-dataset">
+                Change Dataset
+            </button>
+
+            <div id="marks-chart"></div>
+
+        </section>
+
+    </main>
+
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <!-- Our application -->
+    <script type="module" src="src/js/main.js"></script>
+
+</body>
+</html>
