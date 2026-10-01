@@ -10,7 +10,8 @@ import {
     changeMarksDataset,
     sortMarksAscending,
     sortMarksDescending,
-    updateMarksForDepartment
+    updateMarksForDepartment,
+    getCurrentMarksData
 } from "./charts/marksBarChart.js";
 
 import {
@@ -144,11 +145,36 @@ async function initializeDashboard() {
     // MARKS BAR CHART
     // ==================================================
 
+    const marksPageSize = 20;
     let currentStart = 0;
+    let marksSourceData = studentData;
 
     createMarksBarChart(
-        studentData.slice(0, 20)
+        marksSourceData.slice(0, marksPageSize)
     );
+    updateMarksStudentDetails();
+
+    function updateMarksStudentDetails() {
+        const displayedData = getCurrentMarksData();
+        const total = marksSourceData.length;
+        const start = total === 0 ? 0 : currentStart + 1;
+        const end = Math.min(currentStart + displayedData.length, total);
+
+        document.querySelector("#marks-dataset-status").textContent =
+            `Showing students ${start}–${end} of ${total}`;
+
+        document.querySelector("#marks-student-details tbody")
+            .selectAll("tr")
+            .data(displayedData, d => d.student_id)
+            .join("tr")
+            .html(d => `
+                <td>${d.student_id}</td>
+                <td>${d.student_name}</td>
+                <td>${d.department}</td>
+                <td>${d.section}</td>
+                <td>${d.final_marks.toFixed(2)}</td>
+            `);
+    }
 
 
     // Change Dataset
@@ -159,24 +185,26 @@ async function initializeDashboard() {
             "click",
             () => {
 
-                currentStart += 20;
+                currentStart += marksPageSize;
 
                 if (
                     currentStart >=
-                    studentData.length
+                    marksSourceData.length
                 ) {
                     currentStart = 0;
                 }
 
                 const newDataset =
-                    studentData.slice(
+                    marksSourceData.slice(
                         currentStart,
-                        currentStart + 20
+                        currentStart + marksPageSize
                     );
 
                 changeMarksDataset(
                     newDataset
                 );
+
+                updateMarksStudentDetails();
             }
         );
 
@@ -189,6 +217,7 @@ async function initializeDashboard() {
             "click",
             () => {
                 sortMarksAscending();
+                updateMarksStudentDetails();
             }
         );
 
@@ -201,6 +230,7 @@ async function initializeDashboard() {
             "click",
             () => {
                 sortMarksDescending();
+                updateMarksStudentDetails();
             }
         );
 
@@ -358,6 +388,9 @@ async function initializeDashboard() {
             updateMarksForDepartment(
                 filteredData
             );
+            marksSourceData = filteredData;
+            currentStart = 0;
+            updateMarksStudentDetails();
 
 
             // ------------------------------------------
@@ -430,4 +463,3 @@ async function initializeDashboard() {
 // ======================================================
 
 initializeDashboard();
-

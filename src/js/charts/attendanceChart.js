@@ -115,14 +115,14 @@ export function updateAttendanceChart(data) {
 
         .merge(bars)
 
-        .on("click", function(event, d) {
-
-            const message =
-                `Student: ${d.student_id}\n` +
-                `Attendance: ${d.attendance_percentage}%`;
-
-            alert(message);
-
+        .on("mouseenter", function(event, d) {
+            showChartTooltip(event, d);
+            d3.select(this).style("fill", "#374151");
+        })
+        .on("mousemove", moveChartTooltip)
+        .on("mouseleave", function() {
+            hideChartTooltip();
+            d3.select(this).style("fill", null);
         })
 
         .transition()
@@ -169,4 +169,26 @@ export function setCurrentAttendanceMonth(
 
 function getCurrentMonth() {
     return currentMonth;
+}
+
+function showChartTooltip(event, d) {
+    d3.select("#chart-tooltip")
+        .style("display", "block")
+        .html(`
+            <strong>${d.student_id}</strong><br>
+            Month: ${d.month}<br>
+            Attendance: ${d.attendance_percentage.toFixed(2)}%
+        `);
+
+    moveChartTooltip(event);
+}
+
+function moveChartTooltip(event) {
+    d3.select("#chart-tooltip")
+        .style("left", `${event.pageX + 14}px`)
+        .style("top", `${event.pageY - 24}px`);
+}
+
+function hideChartTooltip() {
+    d3.select("#chart-tooltip").style("display", "none");
 }
