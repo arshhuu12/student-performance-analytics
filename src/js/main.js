@@ -1,4 +1,15 @@
 import {
+    loadSemesterData
+} from "./data/loadData.js";
+
+import {
+    createSemesterLineChart,
+    playSemesterAnimation,
+    pauseSemesterAnimation,
+    restartSemesterAnimation
+} from "./charts/semesterLineChart.js";
+
+import {
     createScatterPlot
 } from "./charts/scatterPlot.js";
 
@@ -51,6 +62,31 @@ async function initializeDashboard() {
     createScatterPlot(
     studentData.slice(0, 200)
     );   
+
+    const semesterData =
+    await loadSemesterData();
+
+    createSemesterLineChart(
+        semesterData
+    );
+
+    document
+        .querySelector("#play-semesters")
+        .addEventListener("click", () => {
+            playSemesterAnimation(semesterData);
+        });
+
+    document
+        .querySelector("#pause-semesters")
+        .addEventListener("click", () => {
+            pauseSemesterAnimation();
+        });
+
+    document
+        .querySelector("#restart-semesters")
+        .addEventListener("click", () => {
+            restartSemesterAnimation(semesterData);
+        });
 
 
     const datasetButton =

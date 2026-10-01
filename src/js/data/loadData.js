@@ -37,3 +37,16 @@ export async function loadAttendanceData() {
 
     return data;
 }
+
+export async function loadSemesterData() {
+
+    const data = await d3.csv(
+        "data/synthetic/semester_performance.csv",
+        row => ({
+            semester: +row.semester,
+            average_marks: +row.average_marks
+        })
+    );
+
+    return data;
+}
