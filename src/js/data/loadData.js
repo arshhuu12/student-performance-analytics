@@ -22,3 +22,18 @@ export async function loadStudentData() {
 
     return data;
 }
+
+export async function loadAttendanceData() {
+
+    const data = await d3.csv(
+        "data/synthetic/attendance_monthly.csv",
+        row => ({
+            student_id: row.student_id,
+            month: row.month,
+            attendance_percentage:
+                +row.attendance_percentage
+        })
+    );
+
+    return data;
+}

@@ -1,4 +1,8 @@
-import { loadStudentData } from "./data/loadData.js";
+import {
+    loadStudentData,
+    loadAttendanceData
+} from "./data/loadData.js";
+
 
 import {
     createMarksBarChart,
@@ -6,40 +10,212 @@ import {
 } from "./charts/marksBarChart.js";
 
 
+import {
+    createAttendanceChart,
+    updateAttendanceChart
+} from "./charts/attendanceChart.js";
+
+
 async function initializeDashboard() {
 
-    console.log("Loading student dataset...");
+    console.log("Loading datasets...");
 
-    const data = await loadStudentData();
 
-    console.log("Students loaded:", data.length);
+    // ------------------------------------------------
+    // STUDENT DATA
+    // ------------------------------------------------
+
+    const studentData =
+        await loadStudentData();
+
+
+    console.log(
+        "Students loaded:",
+        studentData.length
+    );
 
 
     let currentStart = 0;
 
-    const firstDataset = data.slice(0, 20);
 
-    createMarksBarChart(firstDataset);
-
-
-    const button = document.querySelector("#change-dataset");
+    createMarksBarChart(
+        studentData.slice(0, 20)
+    );
 
 
-    button.addEventListener("click", () => {
+    const datasetButton =
+        document.querySelector(
+            "#change-dataset"
+        );
 
-        currentStart += 20;
 
-        if (currentStart >= data.length) {
-            currentStart = 0;
+    datasetButton.addEventListener(
+        "click",
+        () => {
+
+            currentStart += 20;
+
+            if (
+                currentStart >=
+                studentData.length
+            ) {
+                currentStart = 0;
+            }
+
+
+            const newDataset =
+                studentData.slice(
+                    currentStart,
+                    currentStart + 20
+                );
+
+
+            changeMarksDataset(
+                newDataset
+            );
         }
+    );
 
-        const newDataset =
-            data.slice(currentStart, currentStart + 20);
 
-        changeMarksDataset(newDataset);
+    // ------------------------------------------------
+    // ATTENDANCE DATA
+    // ------------------------------------------------
 
-    });
+    const attendanceData =
+        await loadAttendanceData();
 
+
+    console.log(
+        "Attendance records:",
+        attendanceData.length
+    );
+
+
+    // ------------------------------------------------
+    // MONTH STATE
+    // ------------------------------------------------
+
+    const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    ];
+
+
+    let currentMonthIndex = 0;
+
+
+    function getMonthData() {
+
+        const month =
+            months[currentMonthIndex];
+
+
+        return attendanceData
+            .filter(
+                d => d.month === month
+            )
+            .slice(0, 20);
+    }
+
+
+    // ------------------------------------------------
+    // CREATE ATTENDANCE CHART
+    // ------------------------------------------------
+
+    createAttendanceChart(
+        getMonthData()
+    );
+
+
+    // ------------------------------------------------
+    // UPDATE MONTH LABEL
+    // ------------------------------------------------
+
+    const monthLabel =
+        document.querySelector(
+            "#current-month"
+        );
+
+
+    function updateMonth() {
+
+        const month =
+            months[currentMonthIndex];
+
+
+        monthLabel.textContent =
+            month;
+
+
+        updateAttendanceChart(
+            getMonthData()
+        );
+    }
+
+
+    // ------------------------------------------------
+    // PREVIOUS MONTH
+    // ------------------------------------------------
+
+    document
+        .querySelector("#previous-month")
+        .addEventListener(
+            "click",
+            () => {
+
+                currentMonthIndex--;
+
+                if (
+                    currentMonthIndex < 0
+                ) {
+                    currentMonthIndex =
+                        months.length - 1;
+                }
+
+
+                updateMonth();
+            }
+        );
+
+
+    // ------------------------------------------------
+    // NEXT MONTH
+    // ------------------------------------------------
+
+    document
+        .querySelector("#next-month")
+        .addEventListener(
+            "click",
+            () => {
+
+                currentMonthIndex++;
+
+                if (
+                    currentMonthIndex >=
+                    months.length
+                ) {
+                    currentMonthIndex = 0;
+                }
+
+
+                updateMonth();
+            }
+        );
+
+
+    console.log(
+        "Dashboard initialized!"
+    );
 }
 
 
