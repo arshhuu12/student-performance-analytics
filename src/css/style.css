@@ -26,11 +26,51 @@ main {
 
 .chart-card {
     max-width: 1100px;
-    margin: auto;
+    margin: 0 auto 25px;
     background: white;
     padding: 25px;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.chart-status {
+    min-height: 1.2em;
+    margin: 14px 0 0;
+    color: #4b5563;
+    font-size: 14px;
+    text-align: center;
+}
+
+.student-details-wrapper {
+    margin-top: 18px;
+}
+
+.student-details-wrapper h3 {
+    margin: 0 0 10px;
+    font-size: 16px;
+}
+
+.student-details-scroll {
+    overflow-x: auto;
+}
+
+#marks-student-details {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+#marks-student-details th,
+#marks-student-details td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+    white-space: nowrap;
+}
+
+#marks-student-details th {
+    background: #f5f7fa;
+    color: #374151;
 }
 
 .chart-card h2 {
@@ -59,6 +99,20 @@ main {
 
     pointer-events: none;
 
+    z-index: 1000;
+}
+
+#chart-tooltip {
+    position: absolute;
+    display: none;
+    background: #1f2937;
+    border-radius: 6px;
+    color: white;
+    padding: 9px 11px;
+    font-size: 13px;
+    line-height: 1.45;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
     z-index: 1000;
 }
 
@@ -126,4 +180,19 @@ main {
 
 .summary-card strong {
     font-size: 24px;
+}
+
+@media (max-width: 700px) {
+    main {
+        padding: 16px;
+    }
+
+    .chart-card,
+    .dashboard-controls {
+        padding: 16px;
+    }
+
+    .dashboard-summary {
+        flex-direction: column;
+    }
 }

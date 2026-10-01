@@ -67,7 +67,27 @@
                 <button id="sort-descending">Sort Descending</button>
             </div>
 
+            <p id="marks-dataset-status" class="chart-status" aria-live="polite"></p>
+
             <div id="marks-chart"></div>
+
+            <div class="student-details-wrapper">
+                <h3>Students Shown in This Chart</h3>
+                <div class="student-details-scroll">
+                    <table id="marks-student-details">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Section</th>
+                                <th>Final Mark</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
 
         </section>
 
@@ -153,6 +173,7 @@
     </main>
 
     <div id="scatter-tooltip"></div>
+    <div id="chart-tooltip" role="tooltip"></div>
 
     <!-- D3.js -->
     <script src="https://d3js.org/d3.v7.min.js"></script>

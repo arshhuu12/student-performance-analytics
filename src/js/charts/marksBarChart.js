@@ -149,6 +149,16 @@ function updateChart(data) {
 
         .merge(bars)
 
+        .on("mouseenter", function(event, d) {
+            showChartTooltip(event, d);
+            d3.select(this).style("fill", "#2563eb");
+        })
+        .on("mousemove", moveChartTooltip)
+        .on("mouseleave", function() {
+            hideChartTooltip();
+            d3.select(this).style("fill", null);
+        })
+
         .transition()
         .duration(1000)
 
@@ -174,6 +184,7 @@ export function sortMarksAscending() {
         (a, b) => a.final_marks - b.final_marks
     );
 
+    currentData = sortedData;
     updateChart(sortedData);
 }
 
@@ -182,6 +193,7 @@ export function sortMarksDescending() {
         (a, b) => b.final_marks - a.final_marks
     );
 
+    currentData = sortedData;
     updateChart(sortedData);
 }
 
@@ -189,4 +201,31 @@ export function updateMarksForDepartment(data) {
     const selectedData = data.slice(0, 20);
     currentData = selectedData;
     updateChart(selectedData);
+}
+
+export function getCurrentMarksData() {
+    return [...currentData];
+}
+
+function showChartTooltip(event, d) {
+    d3.select("#chart-tooltip")
+        .style("display", "block")
+        .html(`
+            <strong>${d.student_name}</strong><br>
+            ID: ${d.student_id}<br>
+            Department: ${d.department} · Section ${d.section}<br>
+            Final Marks: ${d.final_marks.toFixed(2)}
+        `);
+
+    moveChartTooltip(event);
+}
+
+function moveChartTooltip(event) {
+    d3.select("#chart-tooltip")
+        .style("left", `${event.pageX + 14}px`)
+        .style("top", `${event.pageY - 24}px`);
+}
+
+function hideChartTooltip() {
+    d3.select("#chart-tooltip").style("display", "none");
 }
