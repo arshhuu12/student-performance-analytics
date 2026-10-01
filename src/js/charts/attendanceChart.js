@@ -138,3 +138,35 @@ export function updateAttendanceChart(data) {
                 y(d.attendance_percentage)
         );
 }
+
+export function filterAttendanceByStudents(
+    attendanceData,
+    studentData
+    ) {
+    const studentIds = new Set(
+        studentData.map(d => d.student_id)
+    );
+
+    const filteredAttendance =
+        attendanceData.filter(d =>
+            studentIds.has(d.student_id)
+        );
+
+    updateAttendanceChart(
+        filteredAttendance
+            .filter(d => d.month === getCurrentMonth())
+            .slice(0, 20)
+    );
+}
+
+let currentMonth = "January";
+
+export function setCurrentAttendanceMonth(
+    month
+    ) {
+    currentMonth = month;
+}
+
+function getCurrentMonth() {
+    return currentMonth;
+}

@@ -150,3 +150,13 @@ function addPieInteractions(
             );
         });
 }
+
+export function updatePerformancePieChartData(
+    data,
+    section
+) {
+    updatePerformancePieChart(
+        data,
+        section
+    );
+}

@@ -1,33 +1,9 @@
-import {
-    createPerformancePieChart,
-    updatePerformancePieChart
-} from "./charts/performancePieChart.js";
-
-import {
-    initializeDashboardControls
-} from "./dashboard.js";
-
-import {
-    loadSemesterData
-} from "./data/loadData.js";
-
-import {
-    createSemesterLineChart,
-    playSemesterAnimation,
-    pauseSemesterAnimation,
-    restartSemesterAnimation
-} from "./charts/semesterLineChart.js";
-
-import {
-    createScatterPlot,
-    updateScatterPlot
-} from "./charts/scatterPlot.js";
 
 import {
     loadStudentData,
-    loadAttendanceData
+    loadAttendanceData,
+    loadSemesterData
 } from "./data/loadData.js";
-
 
 import {
     createMarksBarChart,
@@ -37,11 +13,32 @@ import {
     updateMarksForDepartment
 } from "./charts/marksBarChart.js";
 
-
 import {
     createAttendanceChart,
-    updateAttendanceChart
+    updateAttendanceChart,
+    setCurrentAttendanceMonth
 } from "./charts/attendanceChart.js";
+
+import {
+    createScatterPlot,
+    updateScatterPlot
+} from "./charts/scatterPlot.js";
+
+import {
+    createSemesterLineChart,
+    playSemesterAnimation,
+    pauseSemesterAnimation,
+    restartSemesterAnimation
+} from "./charts/semesterLineChart.js";
+
+import {
+    createPerformancePieChart,
+    updatePerformancePieChart
+} from "./charts/performancePieChart.js";
+
+import {
+    initializeDashboardControls
+} from "./dashboard.js";
 
 
 async function initializeDashboard() {
@@ -49,145 +46,21 @@ async function initializeDashboard() {
     console.log("Loading datasets...");
 
 
-    // ------------------------------------------------
-    // STUDENT DATA
-    // ------------------------------------------------
+    // ==================================================
+    // LOAD DATA
+    // ==================================================
 
     const studentData =
         await loadStudentData();
-
-
-
 
     console.log(
         "Students loaded:",
         studentData.length
     );
 
-    
-
-    createPerformancePieChart(studentData);
-
-    const sectionSelect =
-        document.querySelector("#section-select");
-
-    sectionSelect.addEventListener("change", () => {
-
-        const selectedSection =
-            sectionSelect.value;
-
-        updatePerformancePieChart(
-            studentData,
-            selectedSection
-        );
-    });
-
-    let currentStart = 0;
-
-
-    createMarksBarChart(
-        studentData.slice(0, 20)
-    );
-
-    
-
-    createScatterPlot(
-    studentData.slice(0, 200)
-    );   
-
-    initializeDashboardControls(
-        studentData,
-        (filteredData) => {
-
-            updateMarksForDepartment(
-                filteredData
-            );
-
-            updateScatterPlot(
-                filteredData.slice(0, 200)
-            );
-        }
-    );
-
-    const semesterData =
-    await loadSemesterData();
-
-    createSemesterLineChart(
-        semesterData
-    );
-
-    document
-        .querySelector("#play-semesters")
-        .addEventListener("click", () => {
-            playSemesterAnimation(semesterData);
-        });
-
-    document
-        .querySelector("#pause-semesters")
-        .addEventListener("click", () => {
-            pauseSemesterAnimation();
-        });
-
-    document
-        .querySelector("#restart-semesters")
-        .addEventListener("click", () => {
-            restartSemesterAnimation(semesterData);
-        });
-
-
-    const datasetButton =
-        document.querySelector(
-            "#change-dataset"
-        );
-
-
-    datasetButton.addEventListener(
-        "click",
-        () => {
-
-            currentStart += 20;
-
-            if (
-                currentStart >=
-                studentData.length
-            ) {
-                currentStart = 0;
-            }
-
-
-            const newDataset =
-                studentData.slice(
-                    currentStart,
-                    currentStart + 20
-                );
-
-
-            changeMarksDataset(
-                newDataset
-            );
-
-            document
-                .querySelector("#sort-ascending")
-                .addEventListener("click", () => {
-                    sortMarksAscending();
-                });
-
-            document
-                .querySelector("#sort-descending")
-                .addEventListener("click", () => {
-                    sortMarksDescending();
-                });
-        }
-    );
-
-
-    // ------------------------------------------------
-    // ATTENDANCE DATA
-    // ------------------------------------------------
 
     const attendanceData =
         await loadAttendanceData();
-
 
     console.log(
         "Attendance records:",
@@ -195,9 +68,18 @@ async function initializeDashboard() {
     );
 
 
-    // ------------------------------------------------
+    const semesterData =
+        await loadSemesterData();
+
+    console.log(
+        "Semester records:",
+        semesterData.length
+    );
+
+
+    // ==================================================
     // MONTH STATE
-    // ------------------------------------------------
+    // ==================================================
 
     const months = [
         "January",
@@ -214,17 +96,15 @@ async function initializeDashboard() {
         "December"
     ];
 
-
     let currentMonthIndex = 0;
 
 
-    function getMonthData() {
+    function getMonthData(data = attendanceData) {
 
         const month =
             months[currentMonthIndex];
 
-
-        return attendanceData
+        return data
             .filter(
                 d => d.month === month
             )
@@ -232,18 +112,107 @@ async function initializeDashboard() {
     }
 
 
-    // ------------------------------------------------
-    // CREATE ATTENDANCE CHART
-    // ------------------------------------------------
+    // ==================================================
+    // PERFORMANCE PIE CHART
+    // ==================================================
+
+    createPerformancePieChart(
+        studentData
+    );
+
+    const sectionSelect =
+        document.querySelector(
+            "#section-select"
+        );
+
+    sectionSelect.addEventListener(
+        "change",
+        () => {
+
+            const selectedSection =
+                sectionSelect.value;
+
+            updatePerformancePieChart(
+                studentData,
+                selectedSection
+            );
+        }
+    );
+
+
+    // ==================================================
+    // MARKS BAR CHART
+    // ==================================================
+
+    let currentStart = 0;
+
+    createMarksBarChart(
+        studentData.slice(0, 20)
+    );
+
+
+    // Change Dataset
+
+    document
+        .querySelector("#change-dataset")
+        .addEventListener(
+            "click",
+            () => {
+
+                currentStart += 20;
+
+                if (
+                    currentStart >=
+                    studentData.length
+                ) {
+                    currentStart = 0;
+                }
+
+                const newDataset =
+                    studentData.slice(
+                        currentStart,
+                        currentStart + 20
+                    );
+
+                changeMarksDataset(
+                    newDataset
+                );
+            }
+        );
+
+
+    // Sort Ascending
+
+    document
+        .querySelector("#sort-ascending")
+        .addEventListener(
+            "click",
+            () => {
+                sortMarksAscending();
+            }
+        );
+
+
+    // Sort Descending
+
+    document
+        .querySelector("#sort-descending")
+        .addEventListener(
+            "click",
+            () => {
+                sortMarksDescending();
+            }
+        );
+
+
+    // ==================================================
+    // ATTENDANCE CHART
+    // ==================================================
 
     createAttendanceChart(
         getMonthData()
     );
 
-
-    // ------------------------------------------------
-    // UPDATE MONTH LABEL
-    // ------------------------------------------------
 
     const monthLabel =
         document.querySelector(
@@ -256,10 +225,12 @@ async function initializeDashboard() {
         const month =
             months[currentMonthIndex];
 
-
         monthLabel.textContent =
             month;
 
+        setCurrentAttendanceMonth(
+            month
+        );
 
         updateAttendanceChart(
             getMonthData()
@@ -267,9 +238,7 @@ async function initializeDashboard() {
     }
 
 
-    // ------------------------------------------------
-    // PREVIOUS MONTH
-    // ------------------------------------------------
+    // Previous Month
 
     document
         .querySelector("#previous-month")
@@ -286,15 +255,12 @@ async function initializeDashboard() {
                         months.length - 1;
                 }
 
-
                 updateMonth();
             }
         );
 
 
-    // ------------------------------------------------
-    // NEXT MONTH
-    // ------------------------------------------------
+    // Next Month
 
     document
         .querySelector("#next-month")
@@ -311,10 +277,146 @@ async function initializeDashboard() {
                     currentMonthIndex = 0;
                 }
 
-
                 updateMonth();
             }
         );
+
+
+    // ==================================================
+    // SCATTER PLOT
+    // ==================================================
+
+    createScatterPlot(
+        studentData.slice(0, 200)
+    );
+
+
+    // ==================================================
+    // SEMESTER LINE CHART
+    // ==================================================
+
+    createSemesterLineChart(
+        semesterData
+    );
+
+
+    // Play
+
+    document
+        .querySelector("#play-semesters")
+        .addEventListener(
+            "click",
+            () => {
+
+                playSemesterAnimation(
+                    semesterData
+                );
+            }
+        );
+
+
+    // Pause
+
+    document
+        .querySelector("#pause-semesters")
+        .addEventListener(
+            "click",
+            () => {
+
+                pauseSemesterAnimation();
+            }
+        );
+
+
+    // Restart
+
+    document
+        .querySelector("#restart-semesters")
+        .addEventListener(
+            "click",
+            () => {
+
+                restartSemesterAnimation(
+                    semesterData
+                );
+            }
+        );
+
+
+    // ==================================================
+    // DEPARTMENT DASHBOARD FILTER
+    // ==================================================
+
+    initializeDashboardControls(
+        studentData,
+        (filteredData) => {
+
+            // ------------------------------------------
+            // MARKS
+            // ------------------------------------------
+
+            updateMarksForDepartment(
+                filteredData
+            );
+
+
+            // ------------------------------------------
+            // SCATTER
+            // ------------------------------------------
+
+            updateScatterPlot(
+                filteredData.slice(0, 200)
+            );
+
+
+            // ------------------------------------------
+            // ATTENDANCE
+            // ------------------------------------------
+
+            const studentIds =
+                new Set(
+                    filteredData.map(
+                        d => d.student_id
+                    )
+                );
+
+
+            const filteredAttendance =
+                attendanceData.filter(
+                    d =>
+                        studentIds.has(
+                            d.student_id
+                        )
+                );
+
+
+            updateAttendanceChart(
+                filteredAttendance
+                    .filter(
+                        d =>
+                            d.month ===
+                            months[currentMonthIndex]
+                    )
+                    .slice(0, 20)
+            );
+
+
+            // ------------------------------------------
+            // PERFORMANCE PIE
+            // ------------------------------------------
+
+            const selectedSection =
+                document.querySelector(
+                    "#section-select"
+                ).value;
+
+
+            updatePerformancePieChart(
+                filteredData,
+                selectedSection
+            );
+        }
+    );
 
 
     console.log(
@@ -323,4 +425,9 @@ async function initializeDashboard() {
 }
 
 
+// ======================================================
+// START APPLICATION
+// ======================================================
+
 initializeDashboard();
+
